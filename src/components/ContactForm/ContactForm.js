@@ -10,7 +10,7 @@ const FormSchema = Yup.object().shape({
     .min(2, 'Too Short!')
     .max(50, 'Too Long!')
     .required('Required'),
-  number: Yup.number().positive('>0').required('Required'),
+  number: Yup.string().min(6).required(),
 });
 export const ContactForm = () => {
   const dispatch = useDispatch();
@@ -48,7 +48,11 @@ export const ContactForm = () => {
         </FormField>
         <FormField>
           Number
-          <Field type="tel" name="number" />
+          <Field
+            type="tel"
+            name="number"
+            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+          />
           <ErrorMessage name="number" component="div" />
         </FormField>
         <button type="submit">Add contact</button>
