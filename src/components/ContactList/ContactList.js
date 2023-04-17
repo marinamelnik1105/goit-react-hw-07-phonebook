@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { ContactData, Item, List } from './ContactList.styled';
-import { deleteContact, getContacts } from 'redux/contactsSlice';
+import { ContactData, Item, List, NameContact } from './ContactList.styled';
+import { getContacts } from 'redux/contactsSlice';
 import { getFilter } from 'redux/filterSlice';
+import { deleteContacts } from 'redux/operations';
 
 const ContactList = () => {
   const contacts = useSelector(getContacts);
@@ -9,25 +10,26 @@ const ContactList = () => {
   const dispatch = useDispatch();
 
   const getVisibleContacts = () => {
-    if (filterValue) {
+    if (contacts) {
       const normalizedFilter = filterValue.toLowerCase();
-      return contacts.filter(({ name }) =>
+      const nameFilter = contacts.filter(({ name }) =>
         name.toLowerCase().includes(normalizedFilter)
       );
+      return nameFilter;
     } else {
-      return contacts;
+      return;
     }
   };
   const visibleContacts = getVisibleContacts();
-
   return (
     <List>
-      {visibleContacts.map(({ id, name, number }) => (
+      {visibleContacts.map(({ id, name, phone }) => (
         <Item key={id}>
           <ContactData>
-            {name}: {number}
+            <NameContact>{name}</NameContact>
+            <p>{phone}</p>
           </ContactData>
-          <button type="button" onClick={() => dispatch(deleteContact(id))}>
+          <button type="button" onClick={() => dispatch(deleteContacts(id))}>
             Delete
           </button>
         </Item>

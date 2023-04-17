@@ -19,4 +19,9 @@ padding: 5px;
 background-color:#2a30df;
 color:#fff; }
 
-}`;
+}input{
+width: 400px}
+p{
+margin: 0;}
+h1,h2{
+margin: 0}`;

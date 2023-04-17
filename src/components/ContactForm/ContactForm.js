@@ -1,21 +1,22 @@
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import { nanoid } from 'nanoid';
 import { FormField, Form, ErrorMessage } from './ContactForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact, getContacts } from 'redux/contactsSlice';
+import { getContacts } from 'redux/contactsSlice';
+import { addContacts } from 'redux/operations';
 
 const FormSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, 'Too Short!')
     .max(50, 'Too Long!')
     .required('Required'),
-  number: Yup.string().min(6).required(),
+  phone: Yup.string().min(6).required(),
 });
 export const ContactForm = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(getContacts);
   const onSave = (values, actions) => {
+    console.log(values);
     const isRepeadCheck = contacts.some(
       ({ name }) => name.toLowerCase() === values.name.toLowerCase()
     );
@@ -23,19 +24,14 @@ export const ContactForm = () => {
       actions.resetForm();
       return alert(`${values.name} is already in contacts.`);
     }
-    const newContact = {
-      id: nanoid(),
-      name: values.name,
-      number: values.number,
-    };
-    dispatch(addContact(newContact));
+    dispatch(addContacts(values));
     actions.resetForm();
   };
   return (
     <Formik
       initialValues={{
         name: '',
-        number: '',
+        phone: '',
       }}
       validationSchema={FormSchema}
       onSubmit={onSave}
@@ -48,11 +44,7 @@ export const ContactForm = () => {
         </FormField>
         <FormField>
           Number
-          <Field
-            type="tel"
-            name="number"
-            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-          />
+          <Field type="tel" name="phone" />
           <ErrorMessage name="number" component="div" />
         </FormField>
         <button type="submit">Add contact</button>
